@@ -26,6 +26,23 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
 
+  #scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--marigold), var(--gold-light), var(--gold));
+    background-size: 200% auto;
+    z-index: 999;
+    box-shadow: 0 0 10px 1px rgba(232,200,119,0.7);
+    animation: progressShine 3s linear infinite;
+    transition: width 0.1s ease-out;
+  }
+  @keyframes progressShine {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
   body {
     background: var(--maroon);
     color: var(--ink);
@@ -95,6 +112,13 @@
   .corner path { stroke-dasharray: 500; stroke-dashoffset: 500; }
   .corner.draw path { animation: draw 2.4s ease forwards; }
   @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  @keyframes goldGlowPulse {
+    0%, 100% { box-shadow: 0 14px 34px rgba(90,14,24,0.1), 0 0 0 rgba(201,162,68,0); }
+    50% { box-shadow: 0 14px 34px rgba(90,14,24,0.1), 0 0 26px 2px rgba(201,162,68,0.35); }
+  }
+  .framed { animation: goldGlowPulse 4.5s ease-in-out infinite; }
+
 
   /* ===== Ambient section backgrounds ===== */
   .amb-dot {
@@ -265,7 +289,11 @@
     text-transform: uppercase;
     color: var(--gold-light);
     opacity: 0;
-    animation: fadeUp 1.1s ease 1.1s forwards;
+    animation: fadeUp 1.1s ease 1.1s forwards, badgeGlow 3s ease-in-out 2.2s infinite;
+  }
+  @keyframes badgeGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,200,119,0.25); }
+    50% { box-shadow: 0 0 18px 3px rgba(232,200,119,0.4); }
   }
 
   @keyframes fadeUp {
@@ -428,6 +456,13 @@
   .countdown-wrap .section-title,
   .countdown-wrap .section-sub { color: var(--gold-light); }
   .countdown-wrap .section-sub { color: var(--marigold-light); }
+  .countdown-wrap h2.section-title {
+    background: linear-gradient(120deg, var(--gold) 20%, var(--gold-light) 40%, var(--marigold-light) 50%, var(--gold-light) 60%, var(--gold) 80%);
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   .countdown-wrap .divider .line { background: var(--gold-light); }
 
   .countdown {
@@ -443,6 +478,19 @@
     background: rgba(232,200,119,0.08);
     border: 1px solid rgba(232,200,119,0.35);
     border-radius: 8px;
+    animation: unitPop 0.6s ease backwards, unitGlow 3s ease-in-out infinite;
+  }
+  .countdown .unit:nth-child(1) { animation-delay: 0.1s, 0s; }
+  .countdown .unit:nth-child(2) { animation-delay: 0.22s, 0.3s; }
+  .countdown .unit:nth-child(3) { animation-delay: 0.34s, 0.6s; }
+  .countdown .unit:nth-child(4) { animation-delay: 0.46s, 0.9s; }
+  @keyframes unitPop {
+    0% { opacity: 0; transform: scale(0.7) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes unitGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(232,200,119,0); }
+    50% { box-shadow: 0 0 16px 1px rgba(232,200,119,0.4); }
   }
   .countdown .num {
     font-family: 'Cormorant Garamond', serif;
@@ -489,6 +537,12 @@
     padding: 22px 4px;
     border-bottom: 1px solid var(--line);
     align-items: center;
+    transition: transform 0.3s ease, background 0.3s ease;
+    border-radius: 6px;
+  }
+  .schedule-item:hover {
+    transform: translateX(4px);
+    background: rgba(201,162,68,0.06);
   }
   .schedule-item:last-child { border-bottom: none; }
 
@@ -499,6 +553,12 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    position: relative;
+    animation: badgeRing 3s ease-in-out infinite;
+  }
+  @keyframes badgeRing {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,68,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(201,162,68,0); }
   }
   .icon-badge svg { width: 22px; height: 22px; }
 
@@ -565,6 +625,33 @@
     background: #fffaf0;
     border-radius: 4px;
     border: 1px solid var(--line);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .venue-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(90,14,24,0.18), 0 0 24px 2px rgba(201,162,68,0.3);
+  }
+  .venue-card + .venue-tag { margin-top: 40px; }
+  .venue-tag {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--marigold);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .venue-card .time {
+    display: inline-block;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    background: rgba(201,162,68,0.16);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 16px;
+    margin-bottom: 16px;
   }
   .venue-card .pin {
     width: 34px; height: 34px;
@@ -602,6 +689,22 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     transition: background 0.25s ease, transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .map-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-20deg);
+    animation: btnShine 3.2s ease-in-out infinite;
+  }
+  @keyframes btnShine {
+    0% { left: -60%; }
+    50% { left: 130%; }
+    100% { left: 130%; }
   }
   .map-btn:hover { background: var(--maroon); transform: translateY(-2px); }
   .map-btn svg { width: 16px; height: 16px; }
@@ -611,7 +714,10 @@
     padding: 60px 40px 54px;
     text-align: center;
     background: linear-gradient(180deg, var(--cream) 0%, var(--deep-red) 100%);
+    position: relative;
+    overflow: hidden;
   }
+  footer .spark { opacity: 0.5; }
   footer .om-small {
     font-size: 1.6rem;
     color: var(--gold);
@@ -623,8 +729,13 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.5rem;
     letter-spacing: 0.1em;
-    color: var(--gold-light);
+    background: linear-gradient(120deg, var(--gold) 0%, var(--gold-light) 40%, var(--marigold-light) 55%, var(--gold-light) 70%, var(--gold) 100%);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
+    animation: foilShine 4s linear infinite;
   }
   footer .thanks {
     font-size: 0.85rem;
@@ -635,9 +746,33 @@
   h2.section-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(1.9rem, 6vw, 2.4rem);
+    background: linear-gradient(120deg, var(--maroon) 20%, var(--red) 40%, var(--marigold) 50%, var(--red) 60%, var(--maroon) 80%);
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     color: var(--maroon);
     margin-bottom: 8px;
+    animation: titleShine 5s linear infinite;
+    position: relative;
+    z-index: 2;
   }
+  @keyframes titleShine {
+    0% { background-position: 0% center; }
+    100% { background-position: 250% center; }
+  }
+  .mandala-watermark {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 340px; height: 340px;
+    transform: translate(-50%, -50%);
+    opacity: 0.05;
+    color: var(--maroon);
+    animation: mandalaSpin 60s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes mandalaSpin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
   .section-sub {
     font-size: 0.7rem;
     letter-spacing: 0.25em;
@@ -664,6 +799,7 @@
 </style>
 </head>
 <body>
+<div id="scroll-progress"></div>
 <div class="page">
 
   <!-- HERO with Mandap / Horse / Varmala background scene -->
@@ -777,6 +913,20 @@
 
   <!-- COUNTDOWN to Varmala muhurat -->
   <section class="countdown-wrap">
+    <svg class="mandala-watermark" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.5" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="36"/><circle cx="50" cy="50" r="26"/>
+      <g>
+        <path d="M50 4 L54 20 L46 20 Z"/><path d="M50 96 L54 80 L46 80 Z"/>
+        <path d="M4 50 L20 54 L20 46 Z"/><path d="M96 50 L80 54 L80 46 Z"/>
+        <path d="M18 18 L30 26 L26 30 Z"/><path d="M82 82 L70 74 L74 70 Z"/>
+        <path d="M82 18 L70 26 L74 30 Z"/><path d="M18 82 L30 74 L26 70 Z"/>
+      </g>
+    </svg>
+    <div class="spark" style="top:14%; left:10%; animation-delay:0s;"></div>
+    <div class="spark" style="top:20%; left:85%; animation-delay:0.6s;"></div>
+    <div class="spark" style="top:70%; left:8%; animation-delay:1.1s;"></div>
+    <div class="spark" style="top:78%; left:88%; animation-delay:0.3s;"></div>
+    <div class="spark" style="top:8%; left:50%; animation-delay:1.6s;"></div>
     <div class="divider reveal">
       <div class="line"></div>
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2 3 5 4 5 8s-3 6-5 12c-2-6-5-8-5-12s3-5 5-8z"/></svg>
@@ -795,6 +945,9 @@
 
   <!-- CEREMONY SCHEDULE with icons -->
   <section class="schedule-wrap">
+    <div class="petal" style="left:6%; animation-duration:11s; animation-delay:0s; color: var(--marigold-light);">❀</div>
+    <div class="petal" style="left:92%; animation-duration:13s; animation-delay:2.5s; color: var(--gold);">❀</div>
+    <div class="petal" style="left:45%; animation-duration:9s; animation-delay:5s; color: var(--marigold);">✿</div>
     <div class="divider reveal">
       <div class="line"></div>
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2 3 5 4 5 8s-3 6-5 12c-2-6-5-8-5-12s3-5 5-8z"/></svg>
@@ -811,7 +964,7 @@
         <div class="rule"></div>
         <div class="what">
           <div class="title">Haldi Ceremony</div>
-          <div class="desc">Turmeric ritual · Morning, at home</div>
+          <div class="desc">Turmeric ritual · 10:00 AM onwards, at Meghwanshi Niwas, Beawar</div>
         </div>
       </div>
       <div class="schedule-item reveal stagger-2">
@@ -822,7 +975,7 @@
         <div class="rule"></div>
         <div class="what">
           <div class="title">Mehendi Ceremony</div>
-          <div class="desc">Henna &amp; music · Evening, at home</div>
+          <div class="desc">Henna &amp; music · 5:00 PM onwards, at Meghwanshi Niwas, Beawar</div>
         </div>
       </div>
       <div class="schedule-item reveal stagger-3">
@@ -833,7 +986,7 @@
         <div class="rule"></div>
         <div class="what">
           <div class="title">Sangeet Night</div>
-          <div class="desc">Dance &amp; celebration · Evening venue</div>
+          <div class="desc">Dance &amp; celebration · 7:30 PM onwards, at Shubh Vivah Lawns, Beawar</div>
         </div>
       </div>
       <div class="schedule-item reveal stagger-4">
@@ -844,7 +997,7 @@
         <div class="rule"></div>
         <div class="what">
           <div class="title">Baraat &amp; Vivah</div>
-          <div class="desc">Wedding procession &amp; ceremony · Beawar, Rajasthan</div>
+          <div class="desc">Baraat departs 5:00 PM from Meghwanshi Niwas, Beawar · Vivah ceremony 7:00 PM at Royal Rajputana Palace, Beawar</div>
         </div>
       </div>
       <div class="schedule-item reveal stagger-5">
@@ -855,7 +1008,7 @@
         <div class="rule"></div>
         <div class="what">
           <div class="title">Reception</div>
-          <div class="desc">Evening celebration · Venue TBA</div>
+          <div class="desc">Evening celebration · 7:00 PM onwards, at Grand Celebration Banquet Hall, Beawar</div>
         </div>
       </div>
     </div>
@@ -863,6 +1016,17 @@
 
   <!-- VENUE with Google Maps link -->
   <section class="venue-wrap">
+    <svg class="mandala-watermark" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.5" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="36"/><circle cx="50" cy="50" r="26"/>
+      <g>
+        <path d="M50 4 L54 20 L46 20 Z"/><path d="M50 96 L54 80 L46 80 Z"/>
+        <path d="M4 50 L20 54 L20 46 Z"/><path d="M96 50 L80 54 L80 46 Z"/>
+        <path d="M18 18 L30 26 L26 30 Z"/><path d="M82 82 L70 74 L74 70 Z"/>
+        <path d="M82 18 L70 26 L74 30 Z"/><path d="M18 82 L30 74 L26 70 Z"/>
+      </g>
+    </svg>
+    <div class="petal" style="left:10%; animation-duration:10s; animation-delay:1s; color: var(--gold);">✿</div>
+    <div class="petal" style="left:82%; animation-duration:12s; animation-delay:3s; color: var(--marigold-light);">❀</div>
     <div class="divider reveal">
       <div class="line"></div>
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2 3 5 4 5 8s-3 6-5 12c-2-6-5-8-5-12s3-5 5-8z"/></svg>
@@ -870,11 +1034,38 @@
     </div>
     <h2 class="section-title reveal">Where to Find Us</h2>
     <p class="section-sub reveal">Venue Details</p>
+
+    <span class="venue-tag reveal">✿ Baraat Departure</span>
     <div class="venue-card reveal">
       <svg class="pin" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
-      <div class="name">Beawar, Rajasthan</div>
-      <div class="addr">Full venue address to be shared closer to the date.</div>
-      <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Beawar%2C+Rajasthan" target="_blank" rel="noopener">
+      <div class="name">Meghwanshi Niwas</div>
+      <div class="time">22 Nov · 5:00 PM</div>
+      <div class="addr">Groom's residence — Meghwanshi Niwas, near Ajmer Road, Beawar, Rajasthan 305901<br>(Full address to be shared closer to the date.)</div>
+      <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Meghwanshi+Niwas%2C+Ajmer+Road%2C+Beawar%2C+Rajasthan" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+        View on Google Maps
+      </a>
+    </div>
+
+    <span class="venue-tag reveal">✿ Wedding Venue</span>
+    <div class="venue-card reveal">
+      <svg class="pin" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+      <div class="name">Royal Rajputana Palace</div>
+      <div class="time">22 Nov · 7:00 PM Vivah Muhurat</div>
+      <div class="addr">Royal Rajputana Palace, Pushkar Road, Beawar, Rajasthan 305901<br>(Full address to be shared closer to the date.)</div>
+      <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Royal+Rajputana+Palace%2C+Beawar%2C+Rajasthan" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+        View on Google Maps
+      </a>
+    </div>
+
+    <span class="venue-tag reveal">✿ Reception Venue</span>
+    <div class="venue-card reveal">
+      <svg class="pin" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+      <div class="name">Grand Celebration Banquet Hall</div>
+      <div class="time">23 Nov · 7:00 PM Onwards</div>
+      <div class="addr">Grand Celebration Banquet Hall, Station Road, Beawar, Rajasthan 305901<br>(Full address to be shared closer to the date.)</div>
+      <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Grand+Celebration+Banquet+Hall%2C+Beawar%2C+Rajasthan" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
         View on Google Maps
       </a>
@@ -882,6 +1073,10 @@
   </section>
 
   <footer>
+    <div class="spark" style="top:14%; left:14%; animation-delay:0.2s;"></div>
+    <div class="spark" style="top:20%; left:82%; animation-delay:0.9s;"></div>
+    <div class="spark" style="top:70%; left:20%; animation-delay:1.4s;"></div>
+    <div class="spark" style="top:75%; left:78%; animation-delay:0.5s;"></div>
     <div class="om-small">ॐ</div>
     <div class="monogram">Pradhan &amp; Sheetal</div>
     <div class="thanks">With the blessings of our elders, we welcome you to celebrate with us.</div>
@@ -910,6 +1105,17 @@
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
+
+  // Scroll progress bar
+  const progressBar = document.getElementById('scroll-progress');
+  function updateProgress() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
 
   // Reveal-on-scroll for sections below the hero
   const revealEls = document.querySelectorAll('.reveal');
